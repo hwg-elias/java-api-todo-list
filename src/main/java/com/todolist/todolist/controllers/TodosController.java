@@ -18,6 +18,7 @@ import com.todolist.todolist.repositories.UserRepository;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,8 +26,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
+@SuppressWarnings("rawtypes")
 @RequestMapping("/todo")
 @CrossOrigin(origins = "http://localhost:5173")
 public class TodosController {
@@ -36,8 +39,6 @@ public class TodosController {
 
   @Autowired
   private UserRepository userRepository;
-
-  @SuppressWarnings("rawtypes")
 
   @GetMapping
   public ResponseEntity getAllTodos(@RequestHeader HttpHeaders headers) {
@@ -52,7 +53,6 @@ public class TodosController {
     return ResponseEntity.ok(allTodos);
   }
 
-  @SuppressWarnings({ "rawtypes", "null" })
   @PostMapping
   public ResponseEntity registerTodo(@RequestBody @Valid RequestTodo requestTodo,
       @RequestHeader HttpHeaders headers) {
@@ -68,7 +68,6 @@ public class TodosController {
     return ResponseEntity.ok().build();
   }
 
-  @SuppressWarnings({ "rawtypes" })
   @PatchMapping("/{id}")
   public ResponseEntity updateTodo(@PathVariable("id") String id, @RequestBody @Valid RequestTodo requestTodo) {
     Optional<Todo> todo = todoRepository.findById(id);
@@ -82,7 +81,6 @@ public class TodosController {
     return ResponseEntity.ok().build();
   }
 
-  @SuppressWarnings({ "rawtypes" })
   @PatchMapping("/{id}/complete")
   public ResponseEntity completeTodo(@PathVariable("id") String id, @RequestBody @Valid RequestTodo requestTodo) {
     Optional<Todo> todo = todoRepository.findById(id);
@@ -91,6 +89,12 @@ public class TodosController {
       todoRepository.save(t);
     });
 
+    return ResponseEntity.ok().build();
+  }
+
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity deleteTodo(@PathVariable("id") String id) {
+    todoRepository.deleteById(id);
     return ResponseEntity.ok().build();
   }
 

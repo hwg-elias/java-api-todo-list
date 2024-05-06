@@ -27,9 +27,10 @@ public class SecurityConfiguration {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(HttpMethod.POST, "/auth/*").permitAll()
+            .requestMatchers(HttpMethod.GET, "/todo").authenticated()
             .requestMatchers(HttpMethod.POST, "/todo").authenticated()
-            .requestMatchers(HttpMethod.PATCH, "/todo").authenticated()
-            .requestMatchers(HttpMethod.GET, "/todo").authenticated())
+            .requestMatchers(HttpMethod.PATCH, "/todo/*").authenticated()
+            .requestMatchers(HttpMethod.DELETE, "/todo/delete/*").authenticated())
         .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
 
