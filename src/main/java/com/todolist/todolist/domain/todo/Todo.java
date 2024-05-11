@@ -37,6 +37,8 @@ public class Todo {
 
   private Boolean completed;
 
+  private Boolean active;
+
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   private User user;
@@ -49,6 +51,7 @@ public class Todo {
     } else {
       this.completed = requestTodo.completed();
     }
+    this.active = true;
   }
 
   public void setUser(UserDetails user) {

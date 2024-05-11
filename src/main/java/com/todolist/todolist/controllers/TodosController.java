@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @SuppressWarnings("rawtypes")
@@ -53,13 +52,13 @@ public class TodosController {
     return ResponseEntity.ok(allTodos);
   }
 
+  @SuppressWarnings("null")
   @PostMapping
   public ResponseEntity registerTodo(@RequestBody @Valid RequestTodo requestTodo,
       @RequestHeader HttpHeaders headers) {
     String token = headers.get("Authorization").get(0);
     token = token.replace("Bearer ", "");
     String login = new TokenService().validateToken(token);
-    System.out.println(login);
     UserDetails user = userRepository.findByLogin(login);
     Todo newTodo = new Todo(requestTodo);
     newTodo.setUser(user);
@@ -81,7 +80,7 @@ public class TodosController {
     return ResponseEntity.ok().build();
   }
 
-  @PatchMapping("/{id}/complete")
+  @PatchMapping("/{id}/completed")
   public ResponseEntity completeTodo(@PathVariable("id") String id, @RequestBody @Valid RequestTodo requestTodo) {
     Optional<Todo> todo = todoRepository.findById(id);
     todo.ifPresent(t -> {
@@ -92,7 +91,7 @@ public class TodosController {
     return ResponseEntity.ok().build();
   }
 
-  @DeleteMapping("/delete/{id}")
+  @DeleteMapping("/{id}")
   public ResponseEntity deleteTodo(@PathVariable("id") String id) {
     todoRepository.deleteById(id);
     return ResponseEntity.ok().build();
